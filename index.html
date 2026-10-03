@@ -530,6 +530,9 @@
                 document.getElementById('login-spinner').classList.add('flex');
 
                 setTimeout(() => {
+                    // LƯU TRẠNG THÁI ĐĂNG NHẬP VÀO LOCAL STORAGE
+                    localStorage.setItem('paymoly_logged_in', 'true');
+
                     // Chuyển sang màn hình Dashboard
                     document.getElementById('login-view').classList.add('hidden');
                     document.getElementById('login-view').classList.remove('flex');
@@ -559,6 +562,9 @@
         }
 
         function logout() {
+            // XÓA TRẠNG THÁI ĐĂNG NHẬP KHI LOGOUT
+            localStorage.removeItem('paymoly_logged_in');
+
             document.getElementById('dashboard-view').classList.add('hidden');
             document.getElementById('dashboard-view').classList.remove('flex');
             
@@ -639,6 +645,17 @@
 
         window.onload = function() {
             renderTransactions();
+
+            // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP KHI TẢI TRANG (GIỮ ĐĂNG NHẬP KHI F5)
+            if (localStorage.getItem('paymoly_logged_in') === 'true') {
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('login-view').classList.remove('flex');
+                
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                document.getElementById('dashboard-view').classList.add('flex');
+                
+                switchTab('home');
+            }
         }
     </script>
 </body>
