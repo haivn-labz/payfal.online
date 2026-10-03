@@ -76,12 +76,17 @@
             
             <!-- Login Form Container -->
             <div id="login-form-container">
+                <!-- Thêm thông báo lỗi ẩn -->
+                <div id="login-error" class="hidden text-red-500 text-sm font-semibold mb-4 text-left p-3 bg-red-50 rounded-lg border border-red-200">
+                    <i class="fa-solid fa-circle-exclamation mr-1"></i> Email hoặc mật khẩu không chính xác.
+                </div>
+
                 <form onsubmit="event.preventDefault(); login();" class="space-y-5 text-left" autocomplete="off">
                     <div>
-                        <input type="email" placeholder="Email or mobile number" class="w-full px-4 py-3.5 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-pp-blue focus:ring-1 focus:ring-pp-blue transition-colors" autocomplete="off" required>
+                        <input type="email" id="emailInput" placeholder="Email or mobile number" class="w-full px-4 py-3.5 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-pp-blue focus:ring-1 focus:ring-pp-blue transition-colors" autocomplete="off" required>
                     </div>
                     <div>
-                        <input type="password" placeholder="Password" class="w-full px-4 py-3.5 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-pp-blue focus:ring-1 focus:ring-pp-blue transition-colors text-2xl font-bold tracking-widest" autocomplete="new-password" required>
+                        <input type="password" id="passwordInput" placeholder="Password" class="w-full px-4 py-3.5 text-lg border border-gray-300 rounded-lg focus:outline-none focus:border-pp-blue focus:ring-1 focus:ring-pp-blue transition-colors text-2xl font-bold tracking-widest" autocomplete="new-password" required>
                     </div>
                     <div class="pt-2">
                         <button type="submit" class="w-full bg-pp-dark text-white font-semibold text-lg py-3.5 rounded-full hover:bg-blue-900 transition-colors shadow-sm">
@@ -460,7 +465,6 @@
         function getIconConfig(type) {
             if (type === 'receive') return { bg: 'bg-pp-greenbg', text: 'text-pp-green', icon: 'fa-arrow-down' };
             if (type === 'bank') return { bg: 'bg-pp-iconbluebg', text: 'text-pp-iconblue', icon: 'fa-building-columns' };
-            // Thêm cấu hình màu và icon mũi tên quay lại cho refund
             if (type === 'refund') return { bg: 'bg-pp-redbg', text: 'text-pp-red', icon: 'fa-arrow-rotate-left' };
             return { bg: 'bg-gray-100', text: 'text-gray-600', icon: 'fa-circle' };
         }
@@ -468,7 +472,6 @@
         function generateTransactionRow(trx, isActivityTab) {
             const iconConfig = getIconConfig(trx.type);
             
-            // Xử lý màu chữ số tiền hiển thị
             let amountColor = 'text-gray-900';
             if (trx.type === 'receive') amountColor = 'text-pp-green';
             if (trx.type === 'refund') amountColor = 'text-pp-red';
@@ -509,30 +512,50 @@
             if(fullList) fullList.innerHTML = fullHTML;
         }
 
-        // Auth Logic
+        // --- AUTH LOGIC ---
         function login() {
-            document.getElementById('login-form-container').classList.add('hidden');
-            document.getElementById('login-spinner').classList.remove('hidden');
-            document.getElementById('login-spinner').classList.add('flex');
+            const emailInput = document.getElementById('emailInput').value;
+            const passwordInput = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('login-error');
 
-            setTimeout(() => {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('login-view').classList.remove('flex');
-                
-                document.getElementById('dashboard-view').classList.remove('hidden');
-                document.getElementById('dashboard-view').classList.add('flex');
-                
-                switchTab('home');
-                renderTransactions(); 
-                showToast('Logged in successfully', 'success');
+            // --- TÀI KHOẢN VÀ MẬT KHẨU MẶC ĐỊNH ---
+            const correctEmail = "maitronghaiecom@gmail.com";
+            const correctPassword = "123456";
+
+            if (emailInput === correctEmail && passwordInput === correctPassword) {
+                // Đăng nhập đúng -> Ẩn lỗi, hiện loading spinner
+                errorMsg.classList.add('hidden');
+                document.getElementById('login-form-container').classList.add('hidden');
+                document.getElementById('login-spinner').classList.remove('hidden');
+                document.getElementById('login-spinner').classList.add('flex');
 
                 setTimeout(() => {
-                    document.getElementById('login-form-container').classList.remove('hidden');
-                    document.getElementById('login-spinner').classList.add('hidden');
-                    document.getElementById('login-spinner').classList.remove('flex');
-                }, 500);
+                    // Chuyển sang màn hình Dashboard
+                    document.getElementById('login-view').classList.add('hidden');
+                    document.getElementById('login-view').classList.remove('flex');
+                    
+                    document.getElementById('dashboard-view').classList.remove('hidden');
+                    document.getElementById('dashboard-view').classList.add('flex');
+                    
+                    switchTab('home');
+                    renderTransactions(); 
+                    showToast('Logged in successfully', 'success');
 
-            }, 2000);
+                    // Reset form đăng nhập chạy ngầm để dùng cho lần đăng xuất sau
+                    setTimeout(() => {
+                        document.getElementById('login-form-container').classList.remove('hidden');
+                        document.getElementById('login-spinner').classList.add('hidden');
+                        document.getElementById('login-spinner').classList.remove('flex');
+                        
+                        document.getElementById('emailInput').value = '';
+                        document.getElementById('passwordInput').value = '';
+                    }, 500);
+
+                }, 2000);
+            } else {
+                // Đăng nhập sai -> Hiện thông báo lỗi màu đỏ
+                errorMsg.classList.remove('hidden');
+            }
         }
 
         function logout() {
@@ -543,7 +566,7 @@
             document.getElementById('login-view').classList.add('flex');
         }
 
-        // Tab Switching Logic
+        // --- TAB & MODAL LOGIC ---
         function switchTab(tabId) {
             const contents = document.querySelectorAll('.tab-content');
             contents.forEach(content => content.classList.remove('active'));
@@ -565,7 +588,6 @@
             window.scrollTo(0, 0);
         }
 
-        // Modal Logic
         const modal = document.getElementById('transfer-modal');
         const modalContent = document.getElementById('transfer-modal-content');
 
@@ -593,7 +615,7 @@
             }, 300);
         }
 
-        // Toast Utility
+        // --- TOAST NOTIFICATION LOGIC ---
         let toastTimeout;
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
