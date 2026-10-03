@@ -375,7 +375,6 @@
 
     <script>
         // --- DATA STATE ---
-        // 20 Giao dịch gần nhất được giữ nguyên
         const baseTransactions = [
             { id: 1, name: "William Davis", type: "receive", desc: "Payment received - Pet Hair Removal Mitt", date: "Oct 3, 2026", amount: "+$55.00" },
             { id: 2, name: "Jessica Miller", type: "receive", desc: "Payment received - Walking Shoes", date: "Oct 3, 2026", amount: "+$62.50" },
@@ -387,7 +386,6 @@
             { id: 8, name: "Liam Thomas", type: "receive", desc: "Payment received - Sofa Seat Cover", date: "Sep 29, 2026", amount: "+$53.50" },
             { id: 9, name: "Emma Jackson", type: "receive", desc: "Payment received - Insulin Cooling Case", date: "Sep 28, 2026", amount: "+$69.20" },
             { id: 10, name: "Noah White", type: "receive", desc: "Payment received - Pet Hair Removal Mitt", date: "Sep 27, 2026", amount: "+$58.75" },
-            
             { id: 11, name: "Ava Harris", type: "receive", desc: "Payment received - Walking Shoes", date: "Sep 26, 2026", amount: "+$61.30" },
             { id: 12, name: "Mason Martin", type: "receive", desc: "Payment received - Sofa Seat Cover", date: "Sep 26, 2026", amount: "+$67.90" },
             { id: 13, name: "Isabella Thompson", type: "receive", desc: "Payment received - Insulin Cooling Case", date: "Sep 25, 2026", amount: "+$52.40" },
@@ -400,7 +398,6 @@
             { id: 20, name: "Michael Walker", type: "receive", desc: "Payment received - Sofa Seat Cover", date: "Sep 20, 2026", amount: "+$59.10" }
         ];
 
-        // Tự động sinh thêm 180 giao dịch từ đầu năm 2026 đến 19/09/2026
         const fNames = ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth", "David", "Barbara", "Richard", "Susan", "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"];
         const lNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin"];
         const products = ["Pet Hair Removal Mitt", "Walking Shoes", "Sofa Seat Cover", "Insulin Cooling Case"];
@@ -409,7 +406,8 @@
         const start = new Date("Jan 1, 2026").getTime();
         const end = new Date("Sep 19, 2026").getTime();
 
-        for (let i = 21; i <= 200; i++) {
+        // Tự động sinh 170 giao dịch nhận tiền bình thường
+        for (let i = 21; i <= 190; i++) {
             const time = start + Math.random() * (end - start);
             const d = new Date(time);
             const m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -430,22 +428,51 @@
             });
         }
 
-        // Sắp xếp các giao dịch tạo tự động theo thời gian giảm dần
-        generatedTransactions.sort((a, b) => b.timestamp - a.timestamp);
+        // Tự động sinh 10 giao dịch Refund trong tháng 8 và 9
+        const refundStart = new Date("Aug 1, 2026").getTime();
+        const refundEnd = new Date("Sep 30, 2026").getTime();
+        
+        for (let i = 191; i <= 200; i++) {
+            const time = refundStart + Math.random() * (refundEnd - refundStart);
+            const d = new Date(time);
+            const m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const dateStr = `${m[d.getMonth()]} ${d.getDate()}, 2026`;
+            
+            const name = fNames[Math.floor(Math.random()*fNames.length)] + " " + lNames[Math.floor(Math.random()*lNames.length)];
+            const product = products[Math.floor(Math.random()*products.length)];
+            const amount = (Math.random() * (70 - 50) + 50).toFixed(2);
+            
+            generatedTransactions.push({
+                id: i,
+                name: name,
+                type: "refund", // Đánh dấu là refund
+                desc: "Refund sent - " + product,
+                date: dateStr,
+                amount: "-$" + amount,
+                timestamp: time
+            });
+        }
 
-        // Gộp 20 giao dịch gốc và 180 giao dịch tạo tự động thành mảng 200 giao dịch
+        generatedTransactions.sort((a, b) => b.timestamp - a.timestamp);
         const transactions = [...baseTransactions, ...generatedTransactions];
 
         // --- RENDER LOGIC ---
         function getIconConfig(type) {
             if (type === 'receive') return { bg: 'bg-pp-greenbg', text: 'text-pp-green', icon: 'fa-arrow-down' };
             if (type === 'bank') return { bg: 'bg-pp-iconbluebg', text: 'text-pp-iconblue', icon: 'fa-building-columns' };
+            // Thêm cấu hình màu và icon mũi tên quay lại cho refund
+            if (type === 'refund') return { bg: 'bg-pp-redbg', text: 'text-pp-red', icon: 'fa-arrow-rotate-left' };
             return { bg: 'bg-gray-100', text: 'text-gray-600', icon: 'fa-circle' };
         }
 
         function generateTransactionRow(trx, isActivityTab) {
             const iconConfig = getIconConfig(trx.type);
-            const amountColor = trx.type === 'receive' ? 'text-pp-green' : 'text-gray-900';
+            
+            // Xử lý màu chữ số tiền hiển thị
+            let amountColor = 'text-gray-900';
+            if (trx.type === 'receive') amountColor = 'text-pp-green';
+            if (trx.type === 'refund') amountColor = 'text-pp-red';
+
             const completedTextHTML = isActivityTab ? `<p class="text-[13px] text-gray-500 mt-0.5">Completed</p>` : '';
             
             return `
@@ -482,36 +509,30 @@
             if(fullList) fullList.innerHTML = fullHTML;
         }
 
-        // Auth Logic with simulated network delay
+        // Auth Logic
         function login() {
-            // 1. Hide form, show spinner
             document.getElementById('login-form-container').classList.add('hidden');
             document.getElementById('login-spinner').classList.remove('hidden');
             document.getElementById('login-spinner').classList.add('flex');
 
-            // 2. Simulate 2-second loading delay
             setTimeout(() => {
-                // Hide login section completely
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('login-view').classList.remove('flex');
                 
-                // Show dashboard section
                 document.getElementById('dashboard-view').classList.remove('hidden');
                 document.getElementById('dashboard-view').classList.add('flex');
                 
-                // Initialize dashboard content
                 switchTab('home');
                 renderTransactions(); 
                 showToast('Logged in successfully', 'success');
 
-                // Reset login view in the background for when the user logs out
                 setTimeout(() => {
                     document.getElementById('login-form-container').classList.remove('hidden');
                     document.getElementById('login-spinner').classList.add('hidden');
                     document.getElementById('login-spinner').classList.remove('flex');
                 }, 500);
 
-            }, 2000); // 2000 milliseconds = 2 seconds
+            }, 2000);
         }
 
         function logout() {
@@ -594,7 +615,6 @@
             }, 3000);
         }
 
-        // Initialize on load
         window.onload = function() {
             renderTransactions();
         }
