@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paymoly - Login & Dashboard</title>
+    <title>Paymoly - The safer, easier way to pay</title>
     
     <!-- External Resources -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,6 +39,7 @@
     </script>
     
     <style>
+        html { scroll-behavior: smooth; }
         body { -webkit-font-smoothing: antialiased; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -50,7 +51,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Custom spinner animation */
         .loader {
             border-top-color: #003087;
             -webkit-animation: spinner 1s linear infinite;
@@ -64,19 +64,143 @@
 </head>
 <body class="bg-pp-bg text-pp-text font-sans flex flex-col min-h-screen">
 
-    <!-- ================= LOGIN VIEW ================= -->
-    <div id="login-view" class="flex-1 flex flex-col items-center justify-center bg-white px-4 sm:px-0 min-h-screen">
-        <div class="w-full max-w-md p-8 sm:p-10 border border-gray-200 rounded-2xl shadow-sm text-center">
+    <!-- ================= LANDING PAGE VIEW ================= -->
+    <div id="landing-view" class="flex-1 flex flex-col bg-white min-h-screen">
+        <!-- Navbar -->
+        <header class="flex items-center justify-between px-6 py-5 border-b border-gray-100 sticky top-0 bg-white/90 backdrop-blur-md z-40">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <i class="fa-solid fa-wallet text-4xl text-pp-dark"></i>
+                <span class="text-2xl font-bold text-pp-dark italic tracking-tight hidden sm:block">Paymoly</span>
+            </div>
             
-            <!-- Paymoly Logo + Text -->
+            <!-- Menu liên kết đến các khối nội dung bên dưới -->
+            <nav class="hidden md:flex gap-8 text-gray-700 font-medium z-50">
+                <a href="#personal" class="hover:text-pp-blue transition">Personal</a>
+                <a href="#business" class="hover:text-pp-blue transition">Business</a>
+                <a href="#developer" class="hover:text-pp-blue transition">Developer</a>
+                <a href="#help" class="hover:text-pp-blue transition">Help</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button onclick="showLoginView()" class="px-5 py-2.5 text-pp-dark font-semibold text-sm sm:text-base border border-pp-dark rounded-full hover:bg-gray-50 transition">
+                    Log In
+                </button>
+                <button class="px-5 py-2.5 bg-pp-dark text-white font-semibold text-sm sm:text-base rounded-full hover:bg-blue-900 transition shadow-sm">
+                    Sign Up
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1">
+            <!-- Hero Section -->
+            <section class="flex flex-col items-center justify-center text-center px-4 sm:px-6 py-24 bg-gradient-to-b from-blue-50 to-white">
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 tracking-tight leading-tight">
+                        The simpler, safer way to <span class="text-pp-blue">pay and get paid.</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                        Join millions of users around the world who trust Paymoly for everyday transactions, sending money to friends, and growing their business.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <button class="w-full sm:w-auto px-8 py-4 bg-pp-blue text-white text-lg font-semibold rounded-full hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                            Get Started for Free
+                        </button>
+                        <button onclick="showLoginView()" class="w-full sm:w-auto px-8 py-4 bg-white text-pp-dark border border-gray-200 text-lg font-semibold rounded-full hover:bg-gray-50 transition shadow-sm">
+                            Already have an account?
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Sections Container -->
+            <section class="w-full max-w-6xl mx-auto px-4 sm:px-6 py-24 space-y-32">
+                
+                <!-- 1. Personal Content -->
+                <div id="personal" class="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
+                    <div class="md:w-1/2 space-y-6 text-left">
+                        <h2 class="text-4xl font-bold text-gray-900">Personal</h2>
+                        <p class="text-lg text-gray-600 leading-relaxed">Shop online securely, send money to friends and family in seconds, and manage your everyday spending all in one place. Paymoly keeps your financial data encrypted and protected.</p>
+                        <ul class="space-y-3 text-gray-700 font-medium">
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Buyer Protection on eligible purchases</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Send money domestically & internationally</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Link multiple cards and bank accounts</li>
+                        </ul>
+                    </div>
+                    <div class="md:w-1/2 w-full bg-blue-50 rounded-3xl p-10 flex items-center justify-center min-h-[350px]">
+                        <i class="fa-solid fa-user-shield text-8xl text-pp-blue opacity-80 hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                </div>
+
+                <!-- 2. Business Content -->
+                <div id="business" class="flex flex-col md:flex-row-reverse items-center gap-12 scroll-mt-24">
+                    <div class="md:w-1/2 space-y-6 text-left">
+                        <h2 class="text-4xl font-bold text-gray-900">Business</h2>
+                        <p class="text-lg text-gray-600 leading-relaxed">Accept payments from customers globally, whether you sell online, in-person, or across different marketplaces. Grow your revenue with our trusted checkout experience.</p>
+                        <ul class="space-y-3 text-gray-700 font-medium">
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Accept all major credit cards</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Detailed analytics & reporting</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Seller Protection on eligible sales</li>
+                        </ul>
+                    </div>
+                    <div class="md:w-1/2 w-full bg-gray-50 border border-gray-100 rounded-3xl p-10 flex items-center justify-center min-h-[350px]">
+                        <i class="fa-solid fa-store text-8xl text-gray-400 opacity-80 hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                </div>
+
+                <!-- 3. Developer Content -->
+                <div id="developer" class="flex flex-col md:flex-row items-center gap-12 scroll-mt-24">
+                    <div class="md:w-1/2 space-y-6 text-left">
+                        <h2 class="text-4xl font-bold text-gray-900">Developer</h2>
+                        <p class="text-lg text-gray-600 leading-relaxed">Build seamless checkout experiences with our robust APIs and SDKs. Paymoly provides the tools you need to integrate payments securely and quickly into any platform.</p>
+                        <ul class="space-y-3 text-gray-700 font-medium">
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> RESTful APIs & Webhooks</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Sandbox environment for testing</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Comprehensive documentation</li>
+                        </ul>
+                    </div>
+                    <div class="md:w-1/2 w-full bg-slate-900 rounded-3xl p-10 flex items-center justify-center min-h-[350px]">
+                        <i class="fa-solid fa-code text-8xl text-green-400 opacity-80 hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                </div>
+
+                <!-- 4. Help Content -->
+                <div id="help" class="flex flex-col md:flex-row-reverse items-center gap-12 scroll-mt-24">
+                    <div class="md:w-1/2 space-y-6 text-left">
+                        <h2 class="text-4xl font-bold text-gray-900">Help & Support</h2>
+                        <p class="text-lg text-gray-600 leading-relaxed">Got a question or an issue with a transaction? Our Resolution Center and dedicated support team are here to help you 24/7.</p>
+                        <ul class="space-y-3 text-gray-700 font-medium">
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> 24/7 Customer Service</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Comprehensive FAQ library</li>
+                            <li><i class="fa-solid fa-check text-pp-green mr-2"></i> Secure dispute resolution</li>
+                        </ul>
+                    </div>
+                    <div class="md:w-1/2 w-full bg-blue-50 rounded-3xl p-10 flex items-center justify-center min-h-[350px]">
+                        <i class="fa-solid fa-headset text-8xl text-pp-blue opacity-80 hover:scale-110 transition-transform duration-300"></i>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="bg-gray-50 py-10 text-center text-gray-500 border-t border-gray-200">
+            <p>&copy; 2026 Paymoly. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- ================= LOGIN VIEW (Hidden by default) ================= -->
+    <div id="login-view" class="hidden flex-1 flex-col items-center justify-center bg-white px-4 sm:px-0 min-h-screen relative">
+        <!-- Back to Home Button -->
+        <button onclick="showLandingView()" class="absolute top-6 left-6 text-gray-500 hover:text-gray-900 flex items-center gap-2 font-medium transition">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </button>
+
+        <div class="w-full max-w-md p-8 sm:p-10 border border-gray-200 rounded-2xl shadow-sm text-center mt-10">
+            
             <div class="flex items-center justify-center gap-2 mb-8">
                 <i class="fa-solid fa-wallet text-5xl text-pp-dark"></i>
                 <span class="text-3xl font-bold text-pp-dark italic tracking-tight">Paymoly</span>
             </div>
             
-            <!-- Login Form Container -->
             <div id="login-form-container">
-                <!-- Thêm thông báo lỗi ẩn -->
                 <div id="login-error" class="hidden text-red-500 text-sm font-semibold mb-4 text-left p-3 bg-red-50 rounded-lg border border-red-200">
                     <i class="fa-solid fa-circle-exclamation mr-1"></i> Email hoặc mật khẩu không chính xác.
                 </div>
@@ -111,7 +235,6 @@
                 </div>
             </div>
 
-            <!-- Loading Spinner Container (Hidden by default) -->
             <div id="login-spinner" class="hidden flex-col items-center justify-center py-10 space-y-4">
                 <div class="loader ease-linear rounded-full border-4 border-gray-200 h-16 w-16 mb-4"></div>
                 <p class="text-gray-600 font-medium text-lg animate-pulse">Logging you in...</p>
@@ -120,15 +243,13 @@
         </div>
     </div>
 
-    <!-- ================= DASHBOARD VIEW ================= -->
+    <!-- ================= DASHBOARD VIEW (Hidden by default) ================= -->
     <div id="dashboard-view" class="hidden flex-1 flex-col w-full">
-        
         <!-- Header Navigation -->
         <header class="bg-pp-dark text-white shadow-sm sticky top-0 z-40">
             <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
                     
-                    <!-- Logo & Main Nav -->
                     <div class="flex items-center gap-4 lg:gap-8">
                         <a href="#" class="flex items-center gap-2 flex-shrink-0" onclick="switchTab('home')">
                             <i class="fa-solid fa-wallet text-3xl text-white"></i>
@@ -154,7 +275,6 @@
                         </nav>
                     </div>
 
-                    <!-- Right Actions (Logout) -->
                     <div class="flex items-center space-x-4 lg:space-x-6">
                         <button class="text-white opacity-80 hover:opacity-100 transition relative" onclick="showToast('No new notifications')">
                             <i class="fa-solid fa-bell text-xl"></i>
@@ -172,13 +292,10 @@
         </header>
 
         <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            
-            <!-- ================= HOME TAB ================= -->
+            <!-- HOME TAB -->
             <section id="home" class="tab-content active">
                 <h1 class="text-[32px] font-medium mb-8 text-gray-900 tracking-tight">Hello, Hai Mai!</h1>
-                
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
                     <!-- Balance Box -->
                     <div class="lg:col-span-1">
                         <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-gray-100 p-7">
@@ -187,15 +304,12 @@
                                 <h2 class="text-[40px] font-bold text-gray-900 tracking-tight leading-none mb-1">$5,340.50</h2>
                                 <p class="text-[15px] text-gray-500">Available</p>
                             </div>
-                            
                             <div class="pt-5 border-t border-gray-100 mb-8">
                                 <h3 class="text-2xl font-semibold text-gray-900 leading-none mb-1">$6,285.00</h3>
                                 <p class="text-[15px] text-gray-500 flex items-center gap-1.5">
                                     <i class="fa-solid fa-lock text-sm text-gray-400"></i> On hold
                                 </p>
                             </div>
-
-                            <!-- Stacked Buttons -->
                             <div class="flex flex-col gap-3">
                                 <button onclick="openTransferModal()" class="w-full bg-pp-dark text-white py-3.5 rounded-full font-semibold text-base hover:bg-blue-900 transition-colors">
                                     Transfer Funds
@@ -206,7 +320,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Recent Activity Box -->
                     <div class="lg:col-span-2">
                         <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden">
@@ -214,14 +327,13 @@
                                 <h3 class="font-semibold text-lg text-gray-900">Recent Activity</h3>
                                 <button onclick="switchTab('activity')" class="text-pp-blue hover:underline text-[15px] font-semibold">See all</button>
                             </div>
-                            <!-- Container for JS injected Home Activity -->
                             <div id="home-activity-list" class="divide-y divide-gray-100"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- ================= ACTIVITY TAB ================= -->
+            <!-- ACTIVITY TAB -->
             <section id="activity" class="tab-content">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <h2 class="text-3xl font-semibold text-gray-900">Activity</h2>
@@ -234,13 +346,12 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden">
                     <div id="full-activity-list" class="divide-y divide-gray-100"></div>
                 </div>
             </section>
 
-            <!-- ================= SEND & REQUEST TAB ================= -->
+            <!-- SEND & REQUEST TAB -->
             <section id="send" class="tab-content">
                 <div class="max-w-2xl mx-auto mt-10 text-center">
                     <h2 class="text-2xl font-semibold text-gray-900 mb-6">Send money</h2>
@@ -253,7 +364,7 @@
                 </div>
             </section>
 
-            <!-- ================= WALLET TAB ================= -->
+            <!-- WALLET TAB -->
             <section id="wallet" class="tab-content">
                 <h2 class="text-3xl font-semibold mb-8 text-gray-900">Wallet</h2>
                 <div class="bg-white border-2 border-dashed border-gray-300 rounded-2xl p-10 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-gray-50 transition max-w-md mx-auto" onclick="showToast('Link a new bank dialog')">
@@ -262,13 +373,10 @@
                 </div>
             </section>
 
-            <!-- ================= ACCOUNT TAB ================= -->
+            <!-- ACCOUNT TAB -->
             <section id="account" class="tab-content">
                 <h2 class="text-3xl font-semibold mb-8 text-gray-900">Account Profile</h2>
-                
                 <div class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden max-w-4xl mx-auto">
-                    
-                    <!-- Profile Header -->
                     <div class="p-8 border-b border-gray-100 flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
                         <div class="w-24 h-24 bg-blue-50 text-pp-blue rounded-full flex items-center justify-center text-3xl font-bold border border-blue-100">
                             HM
@@ -278,11 +386,7 @@
                             <p class="text-gray-500 mt-1">Joined in 2024</p>
                         </div>
                     </div>
-                    
-                    <!-- Profile Details -->
                     <div class="p-8 space-y-8">
-                        
-                        <!-- Personal Info -->
                         <div>
                             <div class="flex justify-between items-center mb-4">
                                 <h4 class="text-lg font-semibold text-gray-900">Personal Info</h4>
@@ -299,8 +403,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Contact Info -->
                         <div>
                             <div class="flex justify-between items-center mb-4">
                                 <h4 class="text-lg font-semibold text-gray-900">Contact Info</h4>
@@ -317,8 +419,6 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Address -->
                         <div>
                             <div class="flex justify-between items-center mb-4">
                                 <h4 class="text-lg font-semibold text-gray-900">Address</h4>
@@ -330,14 +430,13 @@
                                 <p class="text-gray-900 font-medium text-lg">Bac Ninh, 16800</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- ================= TRANSFER MODAL (Hidden by default) ================= -->
+    <!-- ================= MODALS & TOASTS ================= -->
     <div id="transfer-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300" id="transfer-modal-content">
             <div class="p-6 border-b border-gray-100 flex justify-between items-center">
@@ -356,7 +455,6 @@
                         <p class="text-sm text-gray-500">Available: $5,340.50</p>
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Amount to transfer</label>
                     <div class="relative">
@@ -372,7 +470,6 @@
         </div>
     </div>
 
-    <!-- Custom Toast Notification -->
     <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 translate-y-20 opacity-0 transition-all duration-300 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl z-50 flex items-center gap-3">
         <i class="fa-solid fa-circle-check text-green-400" id="toast-icon"></i>
         <span id="toastMessage" class="font-medium text-sm">Message</span>
@@ -411,7 +508,6 @@
         const start = new Date("Jan 1, 2026").getTime();
         const end = new Date("Sep 19, 2026").getTime();
 
-        // Tự động sinh 170 giao dịch nhận tiền bình thường
         for (let i = 21; i <= 190; i++) {
             const time = start + Math.random() * (end - start);
             const d = new Date(time);
@@ -422,21 +518,11 @@
             const product = products[Math.floor(Math.random()*products.length)];
             const amount = (Math.random() * (70 - 50) + 50).toFixed(2);
             
-            generatedTransactions.push({
-                id: i,
-                name: name,
-                type: "receive",
-                desc: "Payment received - " + product,
-                date: dateStr,
-                amount: "+$" + amount,
-                timestamp: time
-            });
+            generatedTransactions.push({ id: i, name: name, type: "receive", desc: "Payment received - " + product, date: dateStr, amount: "+$" + amount, timestamp: time });
         }
 
-        // Tự động sinh 10 giao dịch Refund trong tháng 8 và 9
         const refundStart = new Date("Aug 1, 2026").getTime();
         const refundEnd = new Date("Sep 30, 2026").getTime();
-        
         for (let i = 191; i <= 200; i++) {
             const time = refundStart + Math.random() * (refundEnd - refundStart);
             const d = new Date(time);
@@ -447,15 +533,7 @@
             const product = products[Math.floor(Math.random()*products.length)];
             const amount = (Math.random() * (70 - 50) + 50).toFixed(2);
             
-            generatedTransactions.push({
-                id: i,
-                name: name,
-                type: "refund", // Đánh dấu là refund
-                desc: "Refund sent - " + product,
-                date: dateStr,
-                amount: "-$" + amount,
-                timestamp: time
-            });
+            generatedTransactions.push({ id: i, name: name, type: "refund", desc: "Refund sent - " + product, date: dateStr, amount: "-$" + amount, timestamp: time });
         }
 
         generatedTransactions.sort((a, b) => b.timestamp - a.timestamp);
@@ -471,11 +549,9 @@
 
         function generateTransactionRow(trx, isActivityTab) {
             const iconConfig = getIconConfig(trx.type);
-            
             let amountColor = 'text-gray-900';
             if (trx.type === 'receive') amountColor = 'text-pp-green';
             if (trx.type === 'refund') amountColor = 'text-pp-red';
-
             const completedTextHTML = isActivityTab ? `<p class="text-[13px] text-gray-500 mt-0.5">Completed</p>` : '';
             
             return `
@@ -501,15 +577,35 @@
         function renderTransactions() {
             const homeList = document.getElementById('home-activity-list');
             const fullList = document.getElementById('full-activity-list');
-            
-            let homeHTML = '';
-            let fullHTML = '';
-
+            let homeHTML = '', fullHTML = '';
             transactions.slice(0, 4).forEach(trx => homeHTML += generateTransactionRow(trx, false));
             transactions.forEach(trx => fullHTML += generateTransactionRow(trx, true));
-
             if(homeList) homeList.innerHTML = homeHTML;
             if(fullList) fullList.innerHTML = fullHTML;
+        }
+
+        // --- VIEW SWITCHING LOGIC ---
+        function showLandingView() {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('login-view').classList.remove('flex');
+            
+            document.getElementById('landing-view').classList.remove('hidden');
+            document.getElementById('landing-view').classList.add('flex');
+            
+            // Xóa báo lỗi và trắng ô nhập nếu có
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('emailInput').value = '';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        function showLoginView() {
+            document.getElementById('landing-view').classList.add('hidden');
+            document.getElementById('landing-view').classList.remove('flex');
+            
+            document.getElementById('login-view').classList.remove('hidden');
+            document.getElementById('login-view').classList.add('flex');
+            
+            window.scrollTo(0, 0); // Đảm bảo chuyển sang màn hình đăng nhập thì cuộn lên trên cùng
         }
 
         // --- AUTH LOGIC ---
@@ -518,22 +614,18 @@
             const passwordInput = document.getElementById('passwordInput').value;
             const errorMsg = document.getElementById('login-error');
 
-            // --- TÀI KHOẢN VÀ MẬT KHẨU MẶC ĐỊNH ---
             const correctEmail = "maitronghaiecom@gmail.com";
             const correctPassword = "HaiHien@94";
 
             if (emailInput === correctEmail && passwordInput === correctPassword) {
-                // Đăng nhập đúng -> Ẩn lỗi, hiện loading spinner
                 errorMsg.classList.add('hidden');
                 document.getElementById('login-form-container').classList.add('hidden');
                 document.getElementById('login-spinner').classList.remove('hidden');
                 document.getElementById('login-spinner').classList.add('flex');
 
                 setTimeout(() => {
-                    // LƯU TRẠNG THÁI ĐĂNG NHẬP VÀO LOCAL STORAGE
                     localStorage.setItem('paymoly_logged_in', 'true');
 
-                    // Chuyển sang màn hình Dashboard
                     document.getElementById('login-view').classList.add('hidden');
                     document.getElementById('login-view').classList.remove('flex');
                     
@@ -544,7 +636,6 @@
                     renderTransactions(); 
                     showToast('Logged in successfully', 'success');
 
-                    // Reset form đăng nhập chạy ngầm để dùng cho lần đăng xuất sau
                     setTimeout(() => {
                         document.getElementById('login-form-container').classList.remove('hidden');
                         document.getElementById('login-spinner').classList.add('hidden');
@@ -556,20 +647,17 @@
 
                 }, 2000);
             } else {
-                // Đăng nhập sai -> Hiện thông báo lỗi màu đỏ
                 errorMsg.classList.remove('hidden');
             }
         }
 
         function logout() {
-            // XÓA TRẠNG THÁI ĐĂNG NHẬP KHI LOGOUT
             localStorage.removeItem('paymoly_logged_in');
 
             document.getElementById('dashboard-view').classList.add('hidden');
             document.getElementById('dashboard-view').classList.remove('flex');
             
-            document.getElementById('login-view').classList.remove('hidden');
-            document.getElementById('login-view').classList.add('flex');
+            showLandingView();
         }
 
         // --- TAB & MODAL LOGIC ---
@@ -608,25 +696,18 @@
         function closeTransferModal() {
             modal.classList.add('opacity-0');
             modalContent.classList.add('scale-95');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
 
         function confirmTransfer() {
             closeTransferModal();
-            setTimeout(() => {
-                showToast('Transfer initiated successfully!', 'success');
-            }, 300);
+            setTimeout(() => { showToast('Transfer initiated successfully!', 'success'); }, 300);
         }
 
-        // --- TOAST NOTIFICATION LOGIC ---
         let toastTimeout;
         function showToast(message, type = 'info') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
-            
             document.getElementById('toastMessage').textContent = message;
             
             if (type === 'success') {
@@ -637,7 +718,6 @@
             
             toast.classList.remove('translate-y-20', 'opacity-0');
             clearTimeout(toastTimeout);
-            
             toastTimeout = setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
@@ -646,8 +726,11 @@
         window.onload = function() {
             renderTransactions();
 
-            // KIỂM TRA TRẠNG THÁI ĐĂNG NHẬP KHI TẢI TRANG (GIỮ ĐĂNG NHẬP KHI F5)
+            // KHI TẢI TRANG LẠI (F5)
             if (localStorage.getItem('paymoly_logged_in') === 'true') {
+                // Đã đăng nhập: Ẩn landing/login, hiện dashboard
+                document.getElementById('landing-view').classList.add('hidden');
+                document.getElementById('landing-view').classList.remove('flex');
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('login-view').classList.remove('flex');
                 
@@ -655,6 +738,12 @@
                 document.getElementById('dashboard-view').classList.add('flex');
                 
                 switchTab('home');
+            } else {
+                // Chưa đăng nhập: Mặc định hiện Landing Page
+                document.getElementById('landing-view').classList.remove('hidden');
+                document.getElementById('landing-view').classList.add('flex');
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('login-view').classList.remove('flex');
             }
         }
     </script>
